@@ -1,0 +1,12 @@
+<RCC>
+    <qresource prefix="/plugins/ProjectAdmin">
+        <file>saveProjectDlg.ui</file>
+        <file>confDlg.ui</file>
+        <file>ProjectAdmin_ui.ui</file>
+        <file alias="conf.png">icon/conf.png</file>
+        <file alias="delete.png">icon/delete.png</file>
+        <file alias="icon.png">icon/icon.png</file>
+        <file alias="save.png">icon/save.png</file>
+        <file alias="save_new.png">icon/save_new.png</file>
+    </qresource>
+</RCC>
