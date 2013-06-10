@@ -29,12 +29,12 @@ import tempfile
 # Initialize Qt resources from file resources.py
 import resources
 # Import the code for the dialog
-from ProjectAdminDialog import ProjectAdminDialog
-from saveProjectDlgDialog import saveProjectDlgWindowDialog
-from confDlgDialog import confDlgWindowDialog
+from gui.ProjectAdminDialog import ProjectAdminDialog
+from gui.saveProjectDlgDialog import saveProjectDlgWindowDialog
+from gui.confDlgDialog import confDlgWindowDialog
 from PyQt4 import QtGui, Qt
 import PyQt4
-from ProjectAdmin_ui import _fromUtf8
+from gui.ProjectAdmin_ui import _fromUtf8
 
 class ProjectAdmin:
 
@@ -46,7 +46,7 @@ class ProjectAdmin:
         self.dlg_save = saveProjectDlgWindowDialog()
         self.dlg_conf = confDlgWindowDialog()
         # initialize plugin directory
-        self.plugin_dir = QFileInfo(QgsApplication.qgisUserDbFilePath()).path() + "/python/plugins/ProjectAdmin"
+        self.plugin_dir = QFileInfo(QgsApplication.qgisUserDbFilePath()).path() + "/python/plugins/qgis-projectadmin"
         # initialize locale
         localePath = ""
         locale = QSettings().value("locale/userLocale").toString()[0:2]
@@ -73,7 +73,7 @@ class ProjectAdmin:
    
     def initGui(self):
         # Create action that will start plugin configuration
-        self.action = QAction(QIcon(":/plugins/ProjectAdmin/icon.png"), \
+        self.action = QAction(QIcon(":/plugins/qgis-projectadmin/icon.png"), \
             u"ProjectAdmin", self.iface.mainWindow())
         # connect the action to the run method
         QObject.connect(self.action, SIGNAL("triggered()"), self.run)
@@ -84,22 +84,22 @@ class ProjectAdmin:
         QObject.connect(self.dlg.ui.btnUpdate, SIGNAL("clicked()"), self.updateProjectAction)
         
         icon_conf = QtGui.QIcon()
-        icon_conf.addPixmap(QtGui.QPixmap(_fromUtf8(":plugins/ProjectAdmin/conf.png")), QtGui.QIcon.Normal, QtGui.QIcon.Off)
+        icon_conf.addPixmap(QtGui.QPixmap(_fromUtf8(":plugins/qgis-projectadmin/conf.png")), QtGui.QIcon.Normal, QtGui.QIcon.Off)
         self.dlg.ui.btnConf.setIcon(icon_conf)
         self.dlg.ui.btnConf.setToolTip(u"Configuración de conexión")
         
         icon_save_new = QtGui.QIcon()
-        icon_save_new.addPixmap(QtGui.QPixmap(_fromUtf8(":plugins/ProjectAdmin/save_new.png")), QtGui.QIcon.Normal, QtGui.QIcon.Off)
+        icon_save_new.addPixmap(QtGui.QPixmap(_fromUtf8(":plugins/qgis-projectadmin/save_new.png")), QtGui.QIcon.Normal, QtGui.QIcon.Off)
         self.dlg.ui.btnSave.setIcon(icon_save_new)
         self.dlg.ui.btnSave.setToolTip("Guardar nuevo proyecto")
         
         icon_save = QtGui.QIcon()
-        icon_save.addPixmap(QtGui.QPixmap(_fromUtf8(":plugins/ProjectAdmin/save.png")), QtGui.QIcon.Normal, QtGui.QIcon.Off)
+        icon_save.addPixmap(QtGui.QPixmap(_fromUtf8(":plugins/qgis-projectadmin/save.png")), QtGui.QIcon.Normal, QtGui.QIcon.Off)
         self.dlg.ui.btnUpdate.setIcon(icon_save)
         self.dlg.ui.btnUpdate.setToolTip("Actualizar proyecto seleccionado")
         
         icon_del = QtGui.QIcon()
-        icon_del.addPixmap(QtGui.QPixmap(_fromUtf8(":plugins/ProjectAdmin/delete.png")), QtGui.QIcon.Normal, QtGui.QIcon.Off)
+        icon_del.addPixmap(QtGui.QPixmap(_fromUtf8(":plugins/qgis-projectadmin/delete.png")), QtGui.QIcon.Normal, QtGui.QIcon.Off)
         self.dlg.ui.btnDelete.setIcon(icon_del)
         self.dlg.ui.btnDelete.setToolTip("Emiminar proyecto seleccionado")
         
@@ -186,18 +186,13 @@ class ProjectAdmin:
         cur = self.conectarDDBB()
         cur.execute("SELECT proyecto FROM proyectos WHERE nombre LIKE '" + nombre + "'")
         contenido_fichero = cur.fetchall()
-        
-        #print "Ejecutando: " + "\"SELECT proyecto FROM proyectos WHERE nombre LIKE '" + nombre + "'\""
-        #print str(contenido_fichero[0][0])
+        contenido_proyecto = contenido_fichero[0][0]
         
         temp_file = tempfile.NamedTemporaryFile('w+b', -1, ".qgs", nombre + "-" + tempfile.gettempprefix(), tempfile.gettempdir(), False)
-        temp_file.write(str(contenido_fichero[0][0]))
+        temp_file.write(str(contenido_proyecto.encode("utf-8")))
         temp_file.seek(0)
         
         qstr = QString(temp_file.name)
-        
-        #print temp_file.name
-        #print qstr
         
         self.iface.addProject(qstr)
         

@@ -1,8 +1,8 @@
 <RCC>
-    <qresource prefix="/plugins/ProjectAdmin">
-        <file>saveProjectDlg.ui</file>
-        <file>confDlg.ui</file>
-        <file>ProjectAdmin_ui.ui</file>
+    <qresource prefix="/plugins/qgis-projectadmin">
+        <file>gui/src/saveProjectDlg.ui</file>
+        <file>gui/src/confDlg.ui</file>
+        <file>gui/src/ProjectAdmin_ui.ui</file>
         <file alias="conf.png">icon/conf.png</file>
         <file alias="delete.png">icon/delete.png</file>
         <file alias="icon.png">icon/icon.png</file>
